@@ -1,0 +1,40 @@
+Parameters:
+  SecurityGroupName:
+    Type: String
+    AllowedPattern: ^[a-zA-Z0-9\-]*$
+  SecurityGroupDescription:
+    Type: String
+    AllowedPattern: ^[a-zA-Z0-9\s\,\.\-\_\:\/\(\)\#\@\[\]\+\=\&\;\{\}\!\$\*]{1,255}$
+  VpcID:
+    Type: String
+    AllowedPattern: ^vpc-[a-zA-Z0-9\-]*$
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Sample-SG-for-WEB-Tier
+      GroupDescription: !Ref SecurityGroupDescription
+      VpcId: !Ref VpcID
+  DefaultEgressRule:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp: 127.0.0.1/32
+      FromPort: -1
+      IpProtocol: -1
+      ToPort: -1
+      GroupId:
+        Fn::GetAtt:
+          - SecurityGroup
+          - GroupId
+  IngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: 127.0.0.1/32
+      FromPort: 22
+      IpProtocol: "tcp"
+      Description: "SS rule"
+      ToPort: 22
+      GroupId:
+        Fn::GetAtt:
+          - SecurityGroup
+          - GroupId
