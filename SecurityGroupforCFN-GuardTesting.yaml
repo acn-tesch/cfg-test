@@ -38,3 +38,15 @@ Resources:
         Fn::GetAtt:
           - SecurityGroup
           - GroupId
+  IngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: 127.0.0.1/32
+      FromPort: ANY
+      IpProtocol: "tcp"
+      Description: "Telnet rule"
+      ToPort: 23
+      GroupId:
+        Fn::GetAtt:
+          - SecurityGroup
+          - GroupId
